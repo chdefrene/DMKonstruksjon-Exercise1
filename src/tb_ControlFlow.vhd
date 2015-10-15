@@ -74,12 +74,18 @@ BEGIN
       wait for 100 ns;
 		reset <= '0';
 
-		-- Default pc value
+		-- Default pc value after first clock cycle
+		pc_write_in <= '1';
+		wait for clk_period;
+		
 		assert pc_out = x"00000000"
-			report "pc_out should be 0 after reset"
+			report "pc_out should be 0 after first clock cycle with pc_write_in = '1' following reset"
 			severity failure;
 
+
 		-- No change on pc_write = 0
+		pc_write_in <= '0';
+
 		for i in 0 to 8 loop
 			if (i mod 2) = 0 then
 				branch_in <= '0';

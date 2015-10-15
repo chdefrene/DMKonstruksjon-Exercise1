@@ -30,14 +30,14 @@ begin
 	PCBehaviour: process(clk, reset)
 	begin
 		if reset = '1' then
-			pc <= (others => '0');
+			pc <= (others => '1');
 		elsif rising_edge(clk) and pc_write_in = '1' then
 			-- Handle Jumps
 			if jump_in = '1' then
 				pc <= (pc and "11111100000000000000000000000000") or (unsigned(instruction_in) and "00000011111111111111111111111111");
 			-- Handle branches
 			elsif branch_in = '1' and alu_zero_in = '1' then
-				pc <= pc + 1 + resize(unsigned(instruction_in(15 downto 0)), DATA_WIDTH);
+				pc <= pc + 1 + resize(signed(instruction_in(15 downto 0)), DATA_WIDTH);
 			-- Handle increment by 1
 			else
 				pc <= pc + 1;
